@@ -13,8 +13,8 @@ config.font = wezterm.font(font_name, { weight = "Medium" })
 
 --[[ Appearance ]]
 config.color_scheme = "tokyonight_night"
-config.window_background_opacity = 0.9
-config.macos_window_background_blur = 20
+config.window_background_opacity = 0.95
+config.macos_window_background_blur = 40
 -- Removes the title bar, leaving only the tab bar. Keeps
 -- the ability to resize by dragging the window's edges.
 -- On macOS, 'RESIZE|INTEGRATED_BUTTONS' also looks nice if
@@ -30,15 +30,26 @@ config.window_frame = {
 }
 
 config.window_padding = {
-	left = 2,
-	right = 2,
-	top = 2,
-	bottom = 2,
+	left = 3,
+	right = 3,
+	top = 0,
+	bottom = 0,
 }
+config.tab_bar_at_bottom = true
 config.hide_tab_bar_if_only_one_tab = true
+config.use_fancy_tab_bar = true
+config.tab_max_width = 32
 config.max_fps = 120
 config.prefer_egl = true
-
+config.colors = {
+	tab_bar = {
+		active_tab = {
+			-- I use a solarized dark theme; this gives a teal background to the active tab
+			fg_color = "#073642",
+			bg_color = "#2aa198",
+		},
+	},
+}
 wezterm.on("update-status", function(window)
 	-- Grab the utf8 character for the "powerline" left facing
 	-- solid arrow.
@@ -62,4 +73,52 @@ wezterm.on("update-status", function(window)
 		{ Text = " " .. wezterm.hostname() .. " " },
 	}))
 end)
+
+-- [[ Keymaps ]]
+config.leader = {
+	key = "a",
+	mods = "CTRL",
+	timeout_milliseconds = 2000,
+}
+
+config.keys = {
+	{
+		key = "[",
+		mods = "LEADER",
+		action = wezterm.action.ActivateCopyMode,
+	},
+	{
+		key = "c",
+		mods = "LEADER",
+		action = wezterm.action.SpawnTab("CurrentPaneDomain"),
+	},
+	{
+		key = "n",
+		mods = "LEADER",
+		action = wezterm.action.ActivateTabRelative(1),
+	},
+	{
+		key = "p",
+		mods = "LEADER",
+		action = wezterm.action.ActivateTabRelative(-1),
+	},
+	{
+		key = "w",
+		mods = "LEADER",
+		action = wezterm.action.ShowTabNavigator,
+	},
+	{
+		key = ",",
+		mods = "LEADER",
+		action = wezterm.action.PromptInputLine({
+			description = "Enter new name for tab",
+			action = wezterm.action_callback(function(window, _, line)
+				if line then
+					window:active_tab():set_title(line)
+				end
+			end),
+		}),
+	},
+}
+config.switch_to_last_active_tab_when_closing_tab = true
 return config

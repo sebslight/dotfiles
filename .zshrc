@@ -32,6 +32,8 @@ fi
 
 # Disable Homebrew auto-update
 export HOMEBREW_NO_AUTO_UPDATE=1
+
+# cargo bins
 export PATH="$HOME/.cargo/bin:$PATH"
 
 # bun completions
@@ -66,4 +68,21 @@ _fzf_compgen_dir() {
 
 # zoxide
 eval "$(zoxide init zsh)"
+
+# starship
 eval "$(starship init zsh)"
+
+# Activate syntax highlighting
+source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# Disable underline
+(( ${+ZSH_HIGHLIGHT_STYLES} )) || typeset -A ZSH_HIGHLIGHT_STYLES
+ZSH_HIGHLIGHT_STYLES[path]=none
+ZSH_HIGHLIGHT_STYLES[path_prefix]=none
+# Change colors
+# export ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=blue
+# export ZSH_HIGHLIGHT_STYLES[precommand]=fg=blue
+# export ZSH_HIGHLIGHT_STYLES[arg0]=fg=blue
+
+# Activate autosuggestions
+source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
