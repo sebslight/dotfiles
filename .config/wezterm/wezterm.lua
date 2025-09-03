@@ -7,14 +7,14 @@ end
 
 --[[ Font ]]
 config.font_size = 13
-config.line_height = 1.2
-local font_name = "TX-02"
+config.line_height = 1.1
+local font_name = "TX02 Nerd Font Mono"
 config.font = wezterm.font(font_name, { weight = "Medium" })
 
 --[[ Appearance ]]
 config.color_scheme = "tokyonight_night"
-config.window_background_opacity = 0.95
-config.macos_window_background_blur = 40
+config.window_background_opacity = 0.9
+config.macos_window_background_blur = 30
 -- Removes the title bar, leaving only the tab bar. Keeps
 -- the ability to resize by dragging the window's edges.
 -- On macOS, 'RESIZE|INTEGRATED_BUTTONS' also looks nice if
@@ -37,42 +37,8 @@ config.window_padding = {
 }
 config.tab_bar_at_bottom = true
 config.hide_tab_bar_if_only_one_tab = true
-config.use_fancy_tab_bar = true
-config.tab_max_width = 32
 config.max_fps = 120
 config.prefer_egl = true
-config.colors = {
-	tab_bar = {
-		active_tab = {
-			-- I use a solarized dark theme; this gives a teal background to the active tab
-			fg_color = "#073642",
-			bg_color = "#2aa198",
-		},
-	},
-}
-wezterm.on("update-status", function(window)
-	-- Grab the utf8 character for the "powerline" left facing
-	-- solid arrow.
-	local SOLID_LEFT_ARROW = utf8.char(0xe0b2)
-
-	-- Grab the current window's configuration, and from it the
-	-- palette (this is the combination of your chosen colour scheme
-	-- including any overrides).
-	local color_scheme = window:effective_config().resolved_palette
-	local bg = color_scheme.background
-	local fg = color_scheme.foreground
-
-	window:set_right_status(wezterm.format({
-		-- First, we draw the arrow...
-		{ Background = { Color = "none" } },
-		{ Foreground = { Color = bg } },
-		{ Text = SOLID_LEFT_ARROW },
-		-- Then we draw our text
-		{ Background = { Color = bg } },
-		{ Foreground = { Color = fg } },
-		{ Text = " " .. wezterm.hostname() .. " " },
-	}))
-end)
 
 -- [[ Keymaps ]]
 config.leader = {
@@ -121,4 +87,17 @@ config.keys = {
 	},
 }
 config.switch_to_last_active_tab_when_closing_tab = true
+
+-- Plugins
+-- https://github.com/adriankarlen/bar.wezterm
+local tab_bar = wezterm.plugin.require("https://github.com/adriankarlen/bar.wezterm")
+tab_bar.apply_to_config(config, {
+	position = "bottom",
+	modules = {
+		hostname = {
+			enabled = false,
+		},
+	},
+})
+
 return config
