@@ -111,3 +111,6 @@ return {
   },
 }
 -- vim: ts=2 sts=2 sw=2 et
+-- NOTE: Plugins can specify dependencies.
+--
+-- The dependencies are proper plugin specifications as well - anything

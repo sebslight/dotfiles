@@ -6,3 +6,5 @@ return {
   event = 'InsertEnter',
   opts = {},
 }
+-- autopairs
+-- https://github.com/windwp/nvim-autopairs

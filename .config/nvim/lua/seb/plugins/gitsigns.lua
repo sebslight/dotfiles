@@ -78,3 +78,6 @@ return {
   },
 }
 -- vim: ts=2 sts=2 sw=2 et
+-- Alternatively, use `config = function() ... end` for full control over the configuration.
+-- If you prefer to call `setup` explicitly, use:
+--    {

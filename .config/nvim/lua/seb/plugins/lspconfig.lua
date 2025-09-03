@@ -252,7 +252,20 @@ return {
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
+        'stylua', -- Used to format Lua code,
+        'shfmt', -- Used to format shell scripts
+        'taplo', -- Used to format TOML files
+        'ruff', -- Used to lint Python files
+        'markdownlint', -- Used to lint Markdown files
+        'basedpyright', -- Used to type check Python files
+        'prettierd', -- Used to format various web files
+        'eslint_d', -- Used to lint various web files
+        'gopls', -- Go LSP
+        'dockerfile-language-server', -- Dockerfile LSP
+        'clangd', -- C/C++ LSP
+        'docker-compose-language-service', -- Docker Compose LSP
+        'yamlls', -- YAML LSP
+        'rust-analyzer', -- Rust LSP
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
