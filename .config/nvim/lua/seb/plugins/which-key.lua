@@ -21,52 +21,90 @@ return {
       -- this setting is independent of vim.o.timeoutlen
       delay = 0,
       icons = {
-        -- set icon mappings to true if you have a Nerd Font
+        -- set icon mappings to true if you have a nerd font
         mappings = vim.g.have_nerd_font,
-        -- If you are using a Nerd Font: set icons.keys to an empty table which will use the
-        -- default which-key.nvim defined Nerd Font icons, otherwise define a string table
+        -- if you are using a nerd font: set icons.keys to an empty table which will use the
+        -- default which-key.nvim defined nerd font icons, otherwise define a string table
         keys = vim.g.have_nerd_font and {} or {
-          Up = '<Up> ',
-          Down = '<Down> ',
-          Left = '<Left> ',
-          Right = '<Right> ',
-          C = '<C-…> ',
-          M = '<M-…> ',
-          D = '<D-…> ',
-          S = '<S-…> ',
-          CR = '<CR> ',
-          Esc = '<Esc> ',
-          ScrollWheelDown = '<ScrollWheelDown> ',
-          ScrollWheelUp = '<ScrollWheelUp> ',
-          NL = '<NL> ',
-          BS = '<BS> ',
-          Space = '<Space> ',
-          Tab = '<Tab> ',
-          F1 = '<F1>',
-          F2 = '<F2>',
-          F3 = '<F3>',
-          F4 = '<F4>',
-          F5 = '<F5>',
-          F6 = '<F6>',
-          F7 = '<F7>',
-          F8 = '<F8>',
-          F9 = '<F9>',
-          F10 = '<F10>',
-          F11 = '<F11>',
-          F12 = '<F12>',
+          up = '<up> ',
+          down = '<down> ',
+          left = '<left> ',
+          right = '<right> ',
+          c = '<c-…> ',
+          m = '<m-…> ',
+          d = '<d-…> ',
+          s = '<s-…> ',
+          cr = '<cr> ',
+          esc = '<esc> ',
+          scrollwheeldown = '<scrollwheeldown> ',
+          scrollwheelup = '<scrollwheelup> ',
+          nl = '<nl> ',
+          bs = '<bs> ',
+          space = '<space> ',
+          tab = '<tab> ',
+          f1 = '<f1>',
+          f2 = '<f2>',
+          f3 = '<f3>',
+          f4 = '<f4>',
+          f5 = '<f5>',
+          f6 = '<f6>',
+          f7 = '<f7>',
+          f8 = '<f8>',
+          f9 = '<f9>',
+          f10 = '<f10>',
+          f11 = '<f11>',
+          f12 = '<f12>',
         },
       },
 
-      -- Document existing key chains
+      -- document existing key chains
       spec = {
-        { '<leader>s', group = '[S]earch' },
-        { '<leader>t', group = '[T]oggle' },
-        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>s', group = '[s]earch' },
+        { '<leader>t', group = '[t]oggle' },
+        { '<leader>h', group = 'git [h]unk', mode = { 'n', 'v' } },
+        {
+          mode = { 'o', 'v' },
+
+          -- Group for "[a]round" text objects
+          { 'a', group = '[A]round' },
+          { 'aa', desc = 'Argument' },
+          { 'ac', desc = 'Class' },
+          { 'af', desc = 'Function' },
+          { 'al', desc = 'Loop' },
+          { 'at', desc = 'Tag / Comment' },
+
+          -- Group for "[i]nside" text objects
+          { 'i', group = '[I]nside' },
+          { 'ia', desc = 'Argument' },
+          { 'ic', desc = 'Class' },
+          { 'if', desc = 'Function' },
+          { 'il', desc = 'Loop' },
+          { 'it', desc = 'Tag / Comment' },
+        },
+
+        -- Defines a block of mappings for Normal mode
+        {
+          mode = 'n',
+
+          -- Group for "Previous" movements
+          { '[', group = 'Previous' },
+          { '[c', desc = 'Previous class start' },
+          { '[C', desc = 'Previous class end' },
+          { '[f', desc = 'Previous function start' },
+          { '[F', desc = 'Previous function end' },
+
+          -- Group for "Next" movements
+          { ']', group = 'Next' },
+          { ']c', desc = 'Next class start' },
+          { ']C', desc = 'Next class end' },
+          { ']f', desc = 'Next function start' },
+          { ']F', desc = 'Next function end' },
+        },
       },
     },
   },
 }
 -- vim: ts=2 sts=2 sw=2 et
--- NOTE: Plugins can also be configured to run Lua code when they are loaded.
+-- note: plugins can also be configured to run lua code when they are loaded.
 --
 -- This is often very useful to both group configuration, as well as handle
