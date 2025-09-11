@@ -2,13 +2,33 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 # Inserts a blank line between shell prompts
-add_newline = false
+add_newline = true
+ 
+# Modern two-line prompt with clear separators and right-aligned time
+format = """
+[╭─](fg:cyan) $directory$git_branch$git_status $fill $time
+[╰─](fg:cyan) $character
+"""
+
+# Global timeouts
 command_timeout = 1000
 scan_timeout = 30
+
+# Draw a horizontal fill using box-drawing characters
+[fill]
+symbol = "─"
 
 # Replace the '❯' symbol in the prompt with '➜'
 [character] # The name of the module we are configuring is 'character'
 success_symbol = '[➜](bold green)' # The 'success_symbol' segment is being set to '➜' with the color 'bold green'
+error_symbol = '[✗](bold red)'
+
+# Right-aligned time for context
+[time]
+disabled = false
+time_format = '%H:%M'
+format = '[$time]($style)'
+style = 'fg:bright-black'
 [git_metrics]
 added_style = 'bold blue'
 format = '[+$added]($added_style)/[-$deleted]($deleted_style) '
