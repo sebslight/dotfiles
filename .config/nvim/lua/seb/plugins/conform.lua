@@ -29,10 +29,20 @@ return {
           }
         end
       end,
+      formatters = {
+        my_golines = {
+          command = 'golines',
+          stdin = true,
+          args = {
+            '--max-len=80',
+            '--base-formatter=gofumpt',
+          },
+        },
+      },
       formatters_by_ft = {
         lua = { 'stylua' },
         swift = { 'swiftformat' },
-        go = { 'golines', 'goimports', 'gofumpt' },
+        go = { 'goimports', 'my_golines' },
         html = { 'prettierd', 'prettier', stop_after_first = true },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
