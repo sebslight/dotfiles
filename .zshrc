@@ -1,3 +1,6 @@
+# XDG Base Directory Specification
+export XDG_CONFIG_HOME="$HOME/.config"
+
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
@@ -104,3 +107,22 @@ eval "$(thefuck --alias)"
 
 # go
 export PATH=$(go env GOPATH)/bin:$PATH
+
+# wezterm config directory
+export WEZTERM_CONFIG_FILE="$HOME/.config/wezterm/wezterm.lua"
+export WEZTERM_CONFIG_DIR="$HOME/.config/wezterm"
+
+# Secondary prompt for multi-line commands
+PROMPT2='%F{8}∙%f '
+
+# WezTerm shell integration (semantic prompt zones)
+if [[ $- == *i* ]]; then
+  if [[ "$TERM_PROGRAM" == "WezTerm" ]] || [[ -n "$WEZTERM_EXECUTABLE" ]]; then
+    if [ -f "$HOME/.config/wezterm/wezterm.sh" ]; then
+      source "$HOME/.config/wezterm/wezterm.sh"
+    elif command -v curl >/dev/null 2>&1; then
+      # Fallback: fetch integration script on the fly
+      source <(curl -fsSL https://raw.githubusercontent.com/wez/wezterm/main/assets/shell-integration/wezterm.sh) 2>/dev/null
+    fi
+  fi
+fi
