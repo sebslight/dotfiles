@@ -29,6 +29,7 @@ return {
     toggle = { enabled = true },
     scroll = { enabled = true },
     picker = { enabled = true },
+    bufdelete = { enabled = true },
   },
   keys = {
     {

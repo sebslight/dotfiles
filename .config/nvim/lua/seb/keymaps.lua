@@ -27,4 +27,12 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 vim.keymap.set('n', '\\', function()
   require('oil').toggle_float()
 end, { desc = 'Open [\\] Oil file explorer' })
+
+-- Buffer management
+vim.keymap.set('n', '<leader>bd', function()
+  Snacks.bufdelete.delete()
+end, { desc = 'Delete current buffer' })
+vim.keymap.set('n', '<leader>bD', function()
+  Snacks.bufdelete.delete({ force = true })
+end, { desc = 'Force delete current buffer' })
 -- vim: ts=2 sts=2 sw=2 et

@@ -16,6 +16,9 @@ require 'seb.keymaps'
 -- [[ Auto commands ]]
 require 'seb.autocmds'
 
+--  [[ Custom Commands ]]
+require 'seb.commands'
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 require 'seb.lazy-bootstrap'
 
