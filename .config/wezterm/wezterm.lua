@@ -6,7 +6,7 @@ if wezterm.config_builder then
 end
 
 --[[ Font ]]
-config.font_size = 15
+config.font_size = 14
 config.line_height = 1.1
 local font_name = "TX02 Nerd Font Mono"
 config.font = wezterm.font(font_name, { weight = 600 })
