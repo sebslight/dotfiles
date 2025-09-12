@@ -61,6 +61,7 @@ return {
       spec = {
         { '<leader>s', group = '[s]earch' },
         { '<leader>t', group = '[t]oggle' },
+        { '<leader>n', group = '[n]eotest' },
         { '<leader>h', group = 'git [h]unk', mode = { 'n', 'v' } },
         {
           mode = { 'o', 'v' },
