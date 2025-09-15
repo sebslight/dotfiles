@@ -20,9 +20,6 @@ fi
 # replace common `rm` command with trash
 alias rm='safe-rm'
 
-# VSCode aliases
-alias vscode='/opt/homebrew/bin/code'
-alias code='code-insiders'
 
 # quick access to ~/.zshrc
 alias zz='nvim ~/.zshrc'
