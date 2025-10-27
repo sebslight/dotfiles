@@ -1,0 +1,57 @@
+# ~/.config/xremap/config.yml
+
+virtual_modifiers:
+  - Tab # keep your Tab-as-Hyper combos
+
+modmap:
+  # Caps: tap = Esc, hold = Ctrl (global)
+  - name: "Caps dual-role globally"
+    remap:
+      CapsLock:
+        held: Ctrl_L
+        alone: Esc
+        alone_timeout_millis: 800
+        free_hold: true # held only triggers when combined with another key
+
+  # Inside Factorio: Caps is plain Ctrl (no tap-to-Esc)
+  - name: "Caps exception in Factorio"
+    application:
+      only: [/(?i)factorio/] # confirm WMClass via the GNOME helper below
+    remap:
+      CapsLock: Ctrl_L
+
+  # HHKB LeftCtrl: tap = Esc, hold = Ctrl (device-scoped)
+  - name: "HHKB LeftCtrl dual-role"
+    device:
+      only: ["HHKB-Hybrid_3 Keyboard"] # from your /sys/class/input dump
+    remap:
+      LeftCtrl:
+        held: Ctrl_L
+        alone: Esc
+        alone_timeout_millis: 800
+        free_hold: true
+
+  # HHKB + Factorio: keep LeftCtrl as Ctrl
+  - name: "HHKB LeftCtrl exception in Factorio"
+    device:
+      only: ["HHKB-Hybrid_3 Keyboard"]
+    application:
+      only: [/(?i)factorio/] # confirm WMClass via the GNOME helper below
+    remap:
+      LeftCtrl: Ctrl_L
+
+keymap:
+  - name: "Hyper via Tab (examples)"
+    remap:
+      Tab-h: Left
+      Tab-j: Down
+      Tab-k: Up
+      Tab-l: Right
+      Tab-t: [Ctrl-Alt-Shift-t]
+      Tab-f: [Ctrl-Alt-Shift-f]
+
+  # Optional: disable Tab-Hyper inside Factorio
+  - name: "Disable Tab-Hyper in Factorio (optional)"
+    application:
+      only: [/(?i)factorio/] # confirm WMClass via the GNOME helper below
+    remap: {}

@@ -4,3 +4,7 @@
 {{- if ne .chezmoi.os "darwin" }}
 **/karabiner
 {{- end }}
+
+{{- if ne .chezmoi.os "linux" }}
+**/xremap
+{{- end }}
