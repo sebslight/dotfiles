@@ -155,3 +155,8 @@ fi
 # Add missing env variables for shell-gpt so that we can define actual env variables
 ROLE_STORAGE_PATH="$XDG_CONFIG_HOME/shell_gpt/roles"
 OPENAI_FUNCTIONS_PATH="$XDG_CONFIG_HOME/shell_gpt/functions"
+
+# Add neovim to the PATH only in Linux
+{{ if eq .chezmoi.os "linux" -}}
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+{{ end -}}
