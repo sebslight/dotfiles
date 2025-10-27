@@ -1,0 +1,157 @@
+# XDG Base Directory Specification
+export XDG_CONFIG_HOME="$HOME/.config"
+
+# If you come from bash you might have to change your $PATH.
+export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+
+# Preferred editor for local and remote sessions
+export EDITOR='nvim'
+export VISUAL='cursor'
+
+{{ if eq .chezmoi.os "darwin" -}}
+# >>> nvm (Homebrew) >>>
+# Initialize nvm for interactive shells
+export NVM_DIR="$HOME/.nvm"
+if command -v brew >/dev/null 2>&1; then
+  BREW_PREFIX="$(brew --prefix)"
+else
+  if [ -d "/opt/homebrew" ]; then
+    BREW_PREFIX="/opt/homebrew"
+  else
+    BREW_PREFIX="/usr/local"
+  fi
+fi
+export BREW_PREFIX
+
+# Ensure Homebrew bin is on PATH (Apple Silicon or Intel)
+export PATH="$BREW_PREFIX/bin:$PATH"
+
+if [ -s "$BREW_PREFIX/opt/nvm/nvm.sh" ]; then
+  . "$BREW_PREFIX/opt/nvm/nvm.sh"
+fi
+
+# Enable bash-style completions to load nvm's completion under zsh
+autoload -U +X bashcompinit && bashcompinit
+if [ -s "$BREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]; then
+  . "$BREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
+fi
+# <<< nvm (Homebrew) <<<
+# Disable Homebrew auto-update
+export HOMEBREW_NO_AUTO_UPDATE=1
+
+# Homebrew wrapper and hook
+if [ -f "$BREW_PREFIX/etc/brew-wrap" ]; then
+  source "$BREW_PREFIX/etc/brew-wrap"
+  _post_brewfile_update () {
+    echo "Brewfile was updated!"
+  }
+fi
+
+{{end -}}
+# Load aliases
+[ -f "$HOME/.zsh/aliases.zsh" ] && source "$HOME/.zsh/aliases.zsh"
+
+
+# cargo bins
+export PATH="$HOME/.cargo/bin:$PATH"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+# bun completions
+[ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
+
+
+# enable fzf fuzzy finder and hotkeys
+if command -v fzf >/dev/null 2>&1; then
+  eval "$(fzf --zsh)"
+fi
+# -- Use fd instead of fzf --
+
+export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
+
+# Use fd (https://github.com/sharkdp/fd) for listing path candidates.
+# - The first argument to the function ($1) is the base path to start traversal
+# - See the source code (completion.{bash,zsh}) for the details.
+_fzf_compgen_path() {
+  fd --hidden --exclude .git . "$1"
+}
+
+# Use fd to generate the list for directory completion
+_fzf_compgen_dir() {
+  fd --type=d --hidden --exclude .git . "$1"
+}
+
+# zoxide
+command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
+
+# starship
+command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"
+
+# Shell-GPT integration ZSH v0.2
+if command -v sgpt >/dev/null 2>&1; then
+  _sgpt_zsh() {
+  if [[ -n "$BUFFER" ]]; then
+      _sgpt_prev_cmd=$BUFFER
+      BUFFER+="⌛"
+      zle -I && zle redisplay
+      BUFFER=$(sgpt --shell <<< "$_sgpt_prev_cmd" --no-interaction)
+      zle end-of-line
+  fi
+  }
+  zle -N _sgpt_zsh
+  bindkey ^l _sgpt_zsh
+fi
+# Shell-GPT integration ZSH v0.2
+command -v thefuck >/dev/null 2>&1 && eval "$(thefuck --alias)"
+
+# go
+if command -v go >/dev/null 2>&1; then
+  export PATH="$(go env GOPATH)/bin:$PATH"
+fi
+
+# Secondary prompt for multi-line commands
+PROMPT2='%F{8}∙%f '
+
+{{ if eq .chezmoi.os "darwin" -}}
+# Activate autosuggestions (must be before syntax highlighting)
+if [ -s "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+  source "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+fi
+
+# Activate syntax highlighting (should be last)
+if [ -s "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+  source "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+  # Disable underline
+  (( ${+ZSH_HIGHLIGHT_STYLES} )) || typeset -gA ZSH_HIGHLIGHT_STYLES
+  ZSH_HIGHLIGHT_STYLES[path]=none
+  ZSH_HIGHLIGHT_STYLES[path_prefix]=none
+  ZSH_HIGHLIGHT_STYLES[path_approx]=none
+  ZSH_HIGHLIGHT_STYLES[path_pathseparator]=none
+  ZSH_HIGHLIGHT_STYLES[path_prefix_pathseparator]=none
+fi
+{{ else if eq .chezmoi.os "linux" -}}
+# Activate autosuggestions (must be before syntax highlighting)
+if [ -s "/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+  source "/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+fi
+
+# Activate syntax highlighting (should be last)
+if [ -s "/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+  source "/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+  # Disable underline
+  (( ${+ZSH_HIGHLIGHT_STYLES} )) || typeset -gA ZSH_HIGHLIGHT_STYLES
+  ZSH_HIGHLIGHT_STYLES[path]=none
+  ZSH_HIGHLIGHT_STYLES[path_prefix]=none
+  ZSH_HIGHLIGHT_STYLES[path_approx]=none
+  ZSH_HIGHLIGHT_STYLES[path_pathseparator]=none
+  ZSH_HIGHLIGHT_STYLES[path_prefix_pathseparator]=none
+fi
+{{end -}}
+
+
+# Add missing env variables for shell-gpt so that we can define actual env variables
+ROLE_STORAGE_PATH="$XDG_CONFIG_HOME/shell_gpt/roles"
+OPENAI_FUNCTIONS_PATH="$XDG_CONFIG_HOME/shell_gpt/functions"

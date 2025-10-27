@@ -1,0 +1,6 @@
+.DS_Store
+
+# ignore when not in macOS
+{{- if ne .chezmoi.os "darwin" }}
+**/karabiner
+{{- end }}
