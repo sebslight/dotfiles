@@ -37,3 +37,6 @@ alias czu='chezmoi update'
 alias czr='chezmoi re-add'
 alias czm='chezmoi merge'
 alias czcd='chezmoi cd'
+
+# >>> AI Chat aliases >>>
+alias ai='aichat'

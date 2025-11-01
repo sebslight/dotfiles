@@ -90,21 +90,19 @@ command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
 # starship
 command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"
 
-# Shell-GPT integration ZSH v0.2
-if command -v sgpt >/dev/null 2>&1; then
-  _sgpt_zsh() {
-  if [[ -n "$BUFFER" ]]; then
-      _sgpt_prev_cmd=$BUFFER
-      BUFFER+="⌛"
-      zle -I && zle redisplay
-      BUFFER=$(sgpt --shell <<< "$_sgpt_prev_cmd" --no-interaction)
-      zle end-of-line
-  fi
-  }
-  zle -N _sgpt_zsh
-  bindkey ^l _sgpt_zsh
-fi
-# Shell-GPT integration ZSH v0.2
+# >>> AI Chat integration ZSH v0.2
+_aichat_zsh() {
+    if [[ -n "$BUFFER" ]]; then
+        local _old=$BUFFER
+        BUFFER+="⌛"
+        zle -I && zle redisplay
+        BUFFER=$(aichat -e "$_old")
+        zle end-of-line
+    fi
+}
+zle -N _aichat_zsh
+bindkey '\ee' _aichat_zsh
+# <<< AI Chat integration ZSH v0.2
 command -v thefuck >/dev/null 2>&1 && eval "$(thefuck --alias)"
 
 # go
@@ -166,3 +164,5 @@ export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 {{ end -}}
+
+eval "$(llm cmdcomp --init zsh)"
