@@ -18,7 +18,7 @@ fi
 
 # ##
 # replace common `rm` command with trash
-alias rm='safe-rm'
+command -v safe-rm >/dev/null 2>&1 && alias rm='safe-rm'
 
 # quick access to ~/.zshrc
 alias zz='chezmoi edit ~/.zshrc'

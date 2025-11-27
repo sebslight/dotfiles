@@ -1,12 +1,18 @@
-# XDG Base Directory Specification
-export XDG_CONFIG_HOME="$HOME/.config"
-
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
 # Preferred editor for local and remote sessions
 export EDITOR='nvim'
 export VISUAL='cursor'
+
+# History configuration
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt HIST_IGNORE_DUPS      # Don't record duplicates
+setopt HIST_IGNORE_SPACE     # Don't record commands starting with space
+setopt SHARE_HISTORY         # Share history between sessions
+setopt APPEND_HISTORY        # Append rather than overwrite
 
 {{ if eq .chezmoi.os "darwin" -}}
 # >>> nvm (Homebrew) >>>
@@ -30,6 +36,9 @@ if [ -s "$BREW_PREFIX/opt/nvm/nvm.sh" ]; then
   . "$BREW_PREFIX/opt/nvm/nvm.sh"
 fi
 
+# Initialize zsh completion system
+autoload -Uz compinit && compinit
+
 # Enable bash-style completions to load nvm's completion under zsh
 autoload -U +X bashcompinit && bashcompinit
 if [ -s "$BREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]; then
@@ -52,9 +61,6 @@ fi
 [ -f "$HOME/.zsh/aliases.zsh" ] && source "$HOME/.zsh/aliases.zsh"
 
 
-# cargo bins
-export PATH="$HOME/.cargo/bin:$PATH"
-
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
@@ -70,7 +76,9 @@ fi
 
 export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:500 {} 2>/dev/null || cat {}'"
 export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
+export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
 
 # Use fd (https://github.com/sharkdp/fd) for listing path candidates.
 # - The first argument to the function ($1) is the base path to start traversal
@@ -85,7 +93,19 @@ _fzf_compgen_dir() {
 }
 
 # zoxide
-command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
+if command -v zoxide &> /dev/null; then
+  eval "$(zoxide init zsh)"
+  alias cd="zd"
+  zd() {
+    if [ $# -eq 0 ]; then
+      builtin cd ~ && return
+    elif [ -d "$1" ]; then
+      builtin cd "$1"
+    else
+      z "$@" && printf "\U000F17A9 " && pwd || echo "Error: Directory not found"
+    fi
+  }
+fi
 
 # starship
 command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"
@@ -103,12 +123,18 @@ _aichat_zsh() {
 zle -N _aichat_zsh
 bindkey '\ee' _aichat_zsh
 # <<< AI Chat integration ZSH v0.2
-command -v thefuck >/dev/null 2>&1 && eval "$(thefuck --alias)"
+# Lazy load thefuck (avoids ~300ms startup penalty)
+if command -v thefuck >/dev/null 2>&1; then
+  fuck() {
+    unfunction fuck
+    eval "$(thefuck --alias)"
+    fuck "$@"
+  }
+fi
 
 # go
-if command -v go >/dev/null 2>&1; then
-  export PATH="$(go env GOPATH)/bin:$PATH"
-fi
+export GOPATH="${GOPATH:-$HOME/go}"
+export PATH="$GOPATH/bin:$PATH"
 
 # Secondary prompt for multi-line commands
 PROMPT2='%F{8}∙%f '
@@ -150,12 +176,9 @@ fi
 {{end -}}
 
 
-# Add missing env variables for shell-gpt so that we can define actual env variables
-ROLE_STORAGE_PATH="$XDG_CONFIG_HOME/shell_gpt/roles"
-OPENAI_FUNCTIONS_PATH="$XDG_CONFIG_HOME/shell_gpt/functions"
 
-# Add neovim to the PATH only in Linux
 {{ if eq .chezmoi.os "linux" -}}
+# Add neovim to the PATH only in Linux
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 {{ end -}}
 
@@ -165,4 +188,8 @@ export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 {{ end -}}
 
-eval "$(llm cmdcomp --init zsh)"
+# Add llm cmdcomp shell shortcut
+command -v llm >/dev/null 2>&1 && eval "$(llm cmdcomp --init zsh)"
+
+# Set the LiteLLM URL for llm CLI plugin
+export LITELLM_URL={{ onepasswordRead "op://Dev/LiteLLM/website" }}
